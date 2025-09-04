@@ -522,5 +522,25 @@
       h.value = c.toDataURL('image/jpeg', 0.85);
     });
   </script>
+  <script>
+function canvasToJpegOnWhite(canvas, quality = 0.85) {
+  const w = canvas.width, h = canvas.height;
+  const tmp = document.createElement('canvas');
+  tmp.width = w; tmp.height = h;
+  const tctx = tmp.getContext('2d');
+  tctx.fillStyle = '#fff';           // white background
+  tctx.fillRect(0, 0, w, h);
+  tctx.drawImage(canvas, 0, 0);      // draw the signature pixels on top
+  return tmp.toDataURL('image/jpeg', quality);
+}
+
+// on submit:
+document.getElementById('observationForm').addEventListener('submit', () => {
+  const c = document.getElementById('observer_sign');
+  document.getElementById('observer_signature_data').value =
+    canvasToJpegOnWhite(c, 0.85);
+});
+</script>
+
 </body>
 </html>
