@@ -24,7 +24,7 @@
 
     <fieldset>
       <legend>Session &amp; Participant Details</legend>
-      <label for="hcw_name_role">Healthcare Worker Name &amp; Role</label>
+      <label for="hcw_name_role">Healthcare Worker Name</label>
       <input type="text" id="hcw_name_role" name="hcw_name_role" required />
 
       <div class="flex">
@@ -38,7 +38,7 @@
         </div>
       </div>
 
-      <label for="observer_name_role">Observer Name &amp; Role</label>
+      <label for="observer_name_role">Observer Name</label>
       <input type="text" id="observer_name_role" name="observer_name_role" required />
     </fieldset>
 
@@ -449,11 +449,11 @@
 
     <!-- Observer Signature ONLY -->
     <fieldset>
-      <legend>Observer Signature</legend>
+      <legend>Assessor Signature</legend>
       <div class="signature-box">
-        <label for="observer_print"><strong>Observer – Print</strong></label>
+        <label for="observer_print"><strong>Assessor – Print</strong></label>
         <input type="text" id="observer_print" name="observer_print" />
-        <label for="observer_sign"><strong>Observer – Sign</strong></label>
+        <label for="observer_sign"><strong>Assessor – Sign</strong></label>
         <canvas id="observer_sign" width="600" height="150"></canvas>
         <input type="hidden" id="observer_signature_data" name="observer_signature_data" />
         <button type="button" id="clear_observer_sig">Clear Signature</button>
