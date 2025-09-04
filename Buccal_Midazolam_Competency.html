@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buccal Midazolam Competency Assessment</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .fail-row {
+      background-color: #fdd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Buccal Midazolam Competency Assessment</h1>
+    <a href="index.html" class="home-button">⬅ Home</a>
+  </header>
+
+  <main class="form-container">
+    <form id="competencyForm">
+      <fieldset>
+        <legend>Carer Details</legend>
+        <table style="width: 100%;">
+          <tr>
+            <td><label for="staffName">Carer Name:</label><br><input type="text" id="staffName" name="staffName" required></td>
+            <td><label for="clientName">Client Name:</label><br><input type="text" id="clientName" name="clientName" required></td>
+            <td><label for="nurseAssessorName">Nurse Assessor Name:</label><br><input type="text" id="nurseAssessorName" name="nurseAssessorName" required></td>
+          </tr>
+          <tr>
+            <td><label for="assessmentType">Assessment Type:</label><br>
+              <select id="assessmentType" name="assessmentType" required>
+                <option value="">Select...</option>
+                <option value="Simulated">Simulated</option>
+                <option value="Client Facing">Client Facing</option>
+                <option value="Blended">Blended</option>
+              </select>
+            </td>
+            <td><label for="assessmentDate">Assessment Date:</label><br><input type="date" id="assessmentDate" name="assessmentDate" required></td>
+            <td><label for="expiryDate">Competency Expiry Date:</label><br><input type="date" id="expiryDate" name="expiryDate" readonly></td>
+          </tr>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend>Assessment Criteria</legend>
+        <table>
+          <thead>
+            <tr><th>Skill Area</th><th>Criteria</th><th>Score (1–5)</th></tr>
+          </thead>
+          <tbody id="competency-body"></tbody>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend>Standard Operating Procedure</legend>
+        <label for="sop-confirmation">
+          <input type="checkbox" id="sop-confirmation" required> I confirm I have read and understood the relevant SOP
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Score Review</legend>
+        <table style="width:100%;">
+          <tr>
+            <td style="width:50%; vertical-align: top;">
+              <h4>❌ Areas Scored Below 3 (Automatic Fail)</h4>
+              <ul id="fail-list"></ul>
+            </td>
+            <td style="width:50%; vertical-align: top;">
+              <h4>📝 Assessor Actions and Feedback</h4>
+              <textarea id="assessorFeedback" name="assessorFeedback" rows="10" style="width:100%;"></textarea>
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend>Signatures</legend>
+        <div class="signature-container">
+          <div class="signature-box">
+            <label>Assessor Signature</label>
+            <canvas id="assessorSign" width="300" height="100"></canvas>
+            <small><strong>Assessor Declaration:</strong> Nurse Assessor: I certify that on this date the person named below has demonstrated competence to carry out the procedure detailed above and that I have current N.M.C. registration.</small>
+          </div>
+          <div class="signature-box">
+            <label>Assessee Signature</label>
+            <canvas id="assesseeSign" width="300" height="100"></canvas>
+            <small><strong>Assessee Declaration:</strong> Healthcare Worker: I certify that I have received training and consider myself competent to carry out the above procedure within the competencies detailed above. I understand the scope of these competencies. I will seek further training if I have any concerns about my competency. Upon the date of expiry of this competency, if my training has not been renewed, or if I have concerns about my competency, I will discontinue undertaking the above procedure and seek appropriate advice from my line manager. In all other respects I will seek all necessary advice, guidance and further training needed from time to time for me to continue to operate within these competencies. In signing I accept responsibility for my future actions in performing the task or procedure documented.</small>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="buttons">
+        <button type="button" onclick="saveHTMLAndLocal()">Save Form</button>
+        <button type="button" onclick="clearSignatures()">Clear Signatures</button>
+      </div>
+    </form>
+  </main>
+
+  <script src="scripts.js"></script>
+  <script>
+    const skills = [
+      {
+        area: "1) Preparation",
+        criteria: [
+          "Checks MAR chart and care plan for prescribed dose and timing",
+          "Explains procedure and gains consent",
+          "Wears PPE and performs hand hygiene"
+        ]
+      },
+      {
+        area: "2) Medication Handling",
+        criteria: [
+          "Checks expiry date and condition of midazolam",
+          "Confirms identity of client",
+          "Prepares dose correctly and safely"
+        ]
+      },
+      {
+        area: "3) Administration",
+        criteria: [
+          "Positions client appropriately (on side if necessary)",
+          "Administers dose into buccal cavity as per protocol",
+          "Avoids aspiration and ensures full delivery"
+        ]
+      },
+      {
+        area: "4) Post-Administration Monitoring",
+        criteria: [
+          "Monitors client for effect and adverse reactions",
+          "Records observations including respiration and consciousness",
+          "Prepares to escalate if seizure persists or adverse reaction occurs"
+        ]
+      },
+      {
+        area: "5) Documentation and Follow-Up",
+        criteria: [
+          "Documents time, dose, and response in records",
+          "Reports to family/guardian as required",
+          "Completes incident report if applicable"
+        ]
+      }
+    ];
+
+    const tableBody = document.getElementById("competency-body");
+    const failList = document.getElementById("fail-list");
+
+    function updateFailList() {
+      failList.innerHTML = "";
+      document.querySelectorAll("#competency-body tr").forEach(row => {
+        row.classList.remove("fail-row");
+        const input = row.querySelector("input[type='number']");
+        const score = parseInt(input.value, 10);
+        const area = row.children[0].textContent.trim();
+        const criteria = row.children[1].textContent.trim();
+        if (!isNaN(score) && score < 3) {
+          row.classList.add("fail-row");
+          const li = document.createElement("li");
+          li.textContent = `${area} — ${criteria}`;
+          failList.appendChild(li);
+        }
+      });
+    }
+
+    skills.forEach(skill => {
+      skill.criteria.forEach(item => {
+        const row = document.createElement("tr");
+
+        const tdArea = document.createElement("td");
+        tdArea.textContent = skill.area;
+
+        const tdCriteria = document.createElement("td");
+        tdCriteria.textContent = item;
+
+        const tdScore = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = "1";
+        input.max = "5";
+        input.required = true;
+        input.addEventListener("input", updateFailList);
+        tdScore.appendChild(input);
+
+        row.appendChild(tdArea);
+        row.appendChild(tdCriteria);
+        row.appendChild(tdScore);
+        tableBody.appendChild(row);
+      });
+    });
+
+    function setupFixedExpiryCalculation(dateInputId, expiryOutputId) {
+      const dateInput = document.getElementById(dateInputId);
+      const expiryOutput = document.getElementById(expiryOutputId);
+      function calculateExpiry() {
+        const date = new Date(dateInput.value);
+        if (!isNaN(date)) {
+          date.setFullYear(date.getFullYear() + 1);
+          expiryOutput.valueAsDate = date;
+        }
+      }
+      dateInput.addEventListener("change", calculateExpiry);
+      calculateExpiry();
+    }
+
+    function initSignaturePad(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", e => {
+        drawing = true;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      canvas.addEventListener("mousemove", e => {
+        if (drawing) {
+          ctx.lineTo(e.offsetX, e.offsetY);
+          ctx.stroke();
+        }
+      });
+
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mouseout", () => drawing = false);
+    }
+
+    window.onload = () => {
+      initSignaturePad("assessorSign");
+      initSignaturePad("assesseeSign");
+      setupFixedExpiryCalculation("assessmentDate", "expiryDate");
+    };
+  </script>
+</body>
+</html>

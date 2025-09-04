@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <meta charset="UTF-8" />
+  <title>Competency Forms</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .section {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 15px;
+      background-color: #005ea5;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+    }
+    .section-content {
+      display: none;
+      padding: 15px;
+    }
+    table {
+      width: 100%;
+      border-spacing: 10px;
+    }
+    td {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      padding: 12px;
+    }
+    a {
+      text-decoration: none;
+      font-weight: bold;
+      color: #005ea5;
+      display: block;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Competency Forms</h1>
+
+	<fieldset>
+        <legend><strong>Find a Form</strong></legend>
+	<table>
+          <thread>
+	    <div class="search">
+            <tr><th></th><th><label for="site-search"><br>Search the site:</br></label><br></br><input type="search" id="site-search" name="q" /><button>Search</button></th></tr>
+	</table>
+	</fieldset>
+  
+    <div class="section">
+      <div class="section-header">Respiratory Care</div>
+      <div class="section-content">
+        <table><tr><td><a href="airvo2_competency.html">Airvo 2</a></td><td><a href="#">BVM V1</a></td><td><a href="#">Humidification</a></td></tr><tr><td><a href="#">LVR</a></td><td><a href="#">Manual Assisted Cough</a></td><td><a href="#">Hand Ventilation via Tracheostomy</a></td></tr><tr><td><a href="#">Non-Invasive Vent</a></td><td><a href="#">Invasive Vent via Trachy</a></td><td><a href="#">Oxygen Therapy</a></td></tr><tr><td><a href="#">Oxygen Saturations</a></td><td><a href="#">VEST Airway Clearance System</a></td><td><a href="#">Mechanical Cough Assist</a></td></tr><tr><td><a href="#">Oral Suction</a></td><td><a href="#">Tracheostomy Care, Stoma Care, Dressings and Tube, Tape, Tie Change</a></td><td><a href="#">Tracheostomy Emergency Tube Change</a></td></tr><tr><td><a href="#">Tracheostomy Routine Tube Change</a></td><td><a href="#">Tracheal Suction</a></td></tr></table>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">Neurological & Seizure Management</div>
+      <div class="section-content">
+        <table><tr><td><a href="Buccal_Midazolam_Competency.html">Buccal Midazolam</a></td><td><a href="#">Rectal Paraldehyde (children)</a></td><td><a href="#">Vagus Nerve Stimulation Therapy</a></td></tr><tr><td><a href="#">Spinal and AD</a></td></tr></table>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">Diabetes & Blood Sugar</div>
+      <div class="section-content">
+        <table><tr><td><a href="blood_glucose_testing_competency.html">Blood Glucose Testing</a></td><td><a href="#">Insulin Administration</a></td></tr></table>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">Bowel & Bladder Management</div>
+      <div class="section-content">
+        <table><tr><td><a href="bladder_washout_competency.html">Bladder Washout</a></td><td><a href="#">Female Intermittent Catheterisation</a></td><td><a href="#">Male Intermittent Catheterisation</a></td></tr><tr><td><a href="bowel_management_DRE.html">Bowel Management DRE, DRS and DRF</a></td><td><a href="bowel_management.html">Bowel Management Enema and Suppositories</a></td><td><a href="#">Peristeen Anal Irrigation</a></td></tr><tr><td><a href="#">Qufora Bed System Anal Irrigation</a></td></tr></table>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">Enteral & Gastrostomy Care</div>
+      <div class="section-content">
+        <table><tr><td><a href="enteral_feed_competency.html">Enteral Feed</a></td><td><a href="#">Nasogastric Feeding</a></td><td><a href="advance_rotate_enteral_tube_competency.html">Advance and Rotate Enteral Tube</a></td></tr><tr><td><a href="#">Enteral Balloon Check</a></td><td><a href="#">Enteral Pump Basics</a></td><td><a href="#">Gastric Decompression (Venting PEG Tube)</a></td></tr><tr><td><a href="#">Nasopharyngeal Tube Insertion</a></td></tr></table>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">Airway Access & Suctioning</div>
+      <div class="section-content">
+        <table><tr><td><a href="Nasopharyngeal_Suction_Competency.html">Nasopharyngeal Airway Suction</a></td></tr></table>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">Stoma & Wound Care</div>
+      <div class="section-content">
+        <table><tr><td><a href="stoma_care_competency.html">Stoma Care</a></td><td><a href="#">Nephrostomy</a></td></tr></table>
+      </div>
+    </div>
+    
+  <script>
+    const headers = document.querySelectorAll('.section-header');
+    headers.forEach(header => {
+      header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        content.style.display = content.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+  </script>
+</body>
+</html>

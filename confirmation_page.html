@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Form Submitted</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 2em;
+      background-color: #f5f9ff;
+      text-align: center;
+    }
+
+    .confirmation-box {
+      background: white;
+      padding: 2em;
+      border-radius: 1em;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .confirmation-box h1 {
+      color: #0078D4;
+      font-size: 1.8em;
+      margin-bottom: 0.5em;
+    }
+
+    .confirmation-box p {
+      font-size: 1.1em;
+      margin: 1em 0;
+    }
+
+    .email-step {
+      background: #e6f4ff;
+      border-left: 4px solid #0078D4;
+      text-align: left;
+      padding: 1em;
+      margin-top: 1em;
+      border-radius: 0.5em;
+    }
+
+    .home-link {
+      margin-top: 2em;
+      display: inline-block;
+      text-decoration: none;
+      background: #0078D4;
+      color: white;
+      padding: 0.75em 1.5em;
+      border-radius: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <div class="confirmation-box">
+    <h1>✅ Form Saved Successfully</h1>
+    <p>Your competency form has been saved as an HTML file and downloaded to your device.</p>
+
+    <div class="email-step">
+      <h2>📧 Final Step: Send by Email</h2>
+      <p>1. Open your email app</p>
+      <p>2. Start a new email to <strong>competencyforms@routeshealthcare.com</strong></p>
+      <p>3. Attach the downloaded form file (it will be in your Downloads folder)</p>
+      <p>4. Send the email. It will leave your Outbox when you're next online</p>
+    </div>
+
+    <a href="index.html" class="home-link">⬅ Back to Competency Forms</a>
+  </div>
+</body>
+</html>

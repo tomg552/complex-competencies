@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Routes Healthcare – Complex Observation Form</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Small, form-specific niceties that won't fight your stylesheet */
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .notes { width:100%; min-height:90px; }
+    .section-hint { font-size:0.9rem; color:#555; margin-top:-0.25rem; margin-bottom:0.5rem; }
+    .subtle { color:#666; font-size:0.9rem; }
+    .flex { display:flex; gap:1rem; flex-wrap:wrap; }
+    .w-1-2 { flex: 1 1 280px; }
+    .muted { color:#666; }
+  </style>
+</head>
+<body>
+  <a class="home-button" href="/">← Back to menu</a>
+  <form id="observationForm" action="https://example.com/your-webhook" method="post" enctype="multipart/form-data" novalidate>
+    <h1>Complex Observation Form</h1>
+
+    <fieldset>
+      <legend>Session &amp; Participant Details</legend>
+      <label for="hcw_name_role">Healthcare Worker Name &amp; Role</label>
+      <input type="text" id="hcw_name_role" name="hcw_name_role" required />
+
+      <div class="flex">
+        <div class="w-1-2">
+          <label for="hub_run">Hub &amp; Run No (if applicable)</label>
+          <input type="text" id="hub_run" name="hub_run" />
+        </div>
+        <div class="w-1-2">
+          <label for="obs_date">Date</label>
+          <input type="date" id="obs_date" name="obs_date" required />
+        </div>
+      </div>
+
+      <label for="observer_name_role">Observer Name &amp; Role</label>
+      <input type="text" id="observer_name_role" name="observer_name_role" required />
+    </fieldset>
+
+    <!-- Helper for checklist tables -->
+    <template id="radioTemplate">
+      <td><input type="radio" /></td>
+      <td><input type="radio" /></td>
+      <td><input type="radio" /></td>
+      <td><input type="text" placeholder="Notes (optional)" /></td>
+    </template>
+
+    <!-- Dignity & Respect -->
+    <fieldset>
+      <legend>Dignity &amp; Respect</legend>
+      <p class="section-hint">Observe carer communicating respectfully and effectively with client.</p>
+      <table aria-label="Dignity and Respect Checks">
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>N/A</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Each row: Pass/Fail/NA radios + notes -->
+          <tr>
+            <td>Uses appropriate language</td>
+            <td><input type="radio" name="dignity_language" value="Pass" required></td>
+            <td><input type="radio" name="dignity_language" value="Fail"></td>
+            <td><input type="radio" name="dignity_language" value="NA"></td>
+            <td><input type="text" name="dignity_language_notes" /></td>
+          </tr>
+          <tr>
+            <td>Respects personal/professional boundaries</td>
+            <td><input type="radio" name="dignity_boundaries" value="Pass" required></td>
+            <td><input type="radio" name="dignity_boundaries" value="Fail"></td>
+            <td><input type="radio" name="dignity_boundaries" value="NA"></td>
+            <td><input type="text" name="dignity_boundaries_notes" /></td>
+          </tr>
+          <tr>
+            <td>Maintains confidentiality</td>
+            <td><input type="radio" name="dignity_confidentiality" value="Pass" required></td>
+            <td><input type="radio" name="dignity_confidentiality" value="Fail"></td>
+            <td><input type="radio" name="dignity_confidentiality" value="NA"></td>
+            <td><input type="text" name="dignity_confidentiality_notes" /></td>
+          </tr>
+          <tr>
+            <td>Gains consent &amp; provides choice</td>
+            <td><input type="radio" name="dignity_consent" value="Pass" required></td>
+            <td><input type="radio" name="dignity_consent" value="Fail"></td>
+            <td><input type="radio" name="dignity_consent" value="NA"></td>
+            <td><input type="text" name="dignity_consent_notes" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label for="dignity_good">Good Practice / Demonstration</label>
+      <textarea id="dignity_good" name="dignity_good" class="notes"></textarea>
+
+      <label for="dignity_improve">Areas for Improvement</label>
+      <textarea id="dignity_improve" name="dignity_improve" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Infection Control -->
+    <fieldset>
+      <legend>Infection Control</legend>
+      <table aria-label="Infection Control Checks">
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>N/A</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Hand hygiene before/after care &amp; between clients</td>
+            <td><input type="radio" name="ic_handwash" value="Pass" required></td>
+            <td><input type="radio" name="ic_handwash" value="Fail"></td>
+            <td><input type="radio" name="ic_handwash" value="NA"></td>
+            <td><input type="text" name="ic_handwash_notes" /></td>
+          </tr>
+          <tr>
+            <td>Wearing appropriate PPE</td>
+            <td><input type="radio" name="ic_ppe" value="Pass" required></td>
+            <td><input type="radio" name="ic_ppe" value="Fail"></td>
+            <td><input type="radio" name="ic_ppe" value="NA"></td>
+            <td><input type="text" name="ic_ppe_notes" /></td>
+          </tr>
+          <tr>
+            <td>Cuts covered</td>
+            <td><input type="radio" name="ic_cuts" value="Pass" required></td>
+            <td><input type="radio" name="ic_cuts" value="Fail"></td>
+            <td><input type="radio" name="ic_cuts" value="NA"></td>
+            <td><input type="text" name="ic_cuts_notes" /></td>
+          </tr>
+          <tr>
+            <td>No nail varnish / false nails</td>
+            <td><input type="radio" name="ic_nails" value="Pass" required></td>
+            <td><input type="radio" name="ic_nails" value="Fail"></td>
+            <td><input type="radio" name="ic_nails" value="NA"></td>
+            <td><input type="text" name="ic_nails_notes" /></td>
+          </tr>
+          <tr>
+            <td>Catheter bags emptied; clinical waste disposed correctly</td>
+            <td><input type="radio" name="ic_waste" value="Pass" required></td>
+            <td><input type="radio" name="ic_waste" value="Fail"></td>
+            <td><input type="radio" name="ic_waste" value="NA"></td>
+            <td><input type="text" name="ic_waste_notes" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label for="ic_good">Good Practice / Demonstration</label>
+      <textarea id="ic_good" name="ic_good" class="notes"></textarea>
+
+      <label for="ic_improve">Areas for Improvement</label>
+      <textarea id="ic_improve" name="ic_improve" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Health & Safety -->
+    <fieldset>
+      <legend>Health &amp; Safety</legend>
+      <table aria-label="Health and Safety Checks">
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>N/A</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Handling/transfer techniques follow individual M&amp;H risk assessment</td>
+            <td><input type="radio" name="hs_mh" value="Pass" required></td>
+            <td><input type="radio" name="hs_mh" value="Fail"></td>
+            <td><input type="radio" name="hs_mh" value="NA"></td>
+            <td><input type="text" name="hs_mh_notes" /></td>
+          </tr>
+          <tr>
+            <td>Medical devices cleaning/maintenance</td>
+            <td><input type="radio" name="hs_devices" value="Pass" required></td>
+            <td><input type="radio" name="hs_devices" value="Fail"></td>
+            <td><input type="radio" name="hs_devices" value="NA"></td>
+            <td><input type="text" name="hs_devices_notes" /></td>
+          </tr>
+          <tr>
+            <td>Bed rails</td>
+            <td><input type="radio" name="hs_bedrails" value="Pass" required></td>
+            <td><input type="radio" name="hs_bedrails" value="Fail"></td>
+            <td><input type="radio" name="hs_bedrails" value="NA"></td>
+            <td><input type="text" name="hs_bedrails_notes" /></td>
+          </tr>
+          <tr>
+            <td>Care worker footwear</td>
+            <td><input type="radio" name="hs_footwear" value="Pass" required></td>
+            <td><input type="radio" name="hs_footwear" value="Fail"></td>
+            <td><input type="radio" name="hs_footwear" value="NA"></td>
+            <td><input type="text" name="hs_footwear_notes" /></td>
+          </tr>
+          <tr>
+            <td>Tidying up – wet surfaces etc.</td>
+            <td><input type="radio" name="hs_tidying" value="Pass" required></td>
+            <td><input type="radio" name="hs_tidying" value="Fail"></td>
+            <td><input type="radio" name="hs_tidying" value="NA"></td>
+            <td><input type="text" name="hs_tidying_notes" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label for="hs_good">Good Practice / Demonstration</label>
+      <textarea id="hs_good" name="hs_good" class="notes"></textarea>
+
+      <label for="hs_improve">Areas for Improvement</label>
+      <textarea id="hs_improve" name="hs_improve" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Medication -->
+    <fieldset>
+      <legend>Medication</legend>
+      <ol class="subtle">
+        <li>eMAR consulted at time of medication administration</li>
+        <li>Consent gained</li>
+        <li>Support correct per level of administration (prompting/administering)</li>
+        <li>Specialist techniques: worker has relevant training</li>
+        <li>Client comfort (e.g., drink offered)</li>
+        <li>Activity signed correctly with correct code</li>
+      </ol>
+      <table aria-label="Medication Checks">
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>N/A</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>eMAR consulted at time of administration</td>
+            <td><input type="radio" name="med_emar" value="Pass" required></td>
+            <td><input type="radio" name="med_emar" value="Fail"></td>
+            <td><input type="radio" name="med_emar" value="NA"></td>
+            <td><input type="text" name="med_emar_notes" /></td>
+          </tr>
+          <tr>
+            <td>Consent gained</td>
+            <td><input type="radio" name="med_consent" value="Pass" required></td>
+            <td><input type="radio" name="med_consent" value="Fail"></td>
+            <td><input type="radio" name="med_consent" value="NA"></td>
+            <td><input type="text" name="med_consent_notes" /></td>
+          </tr>
+          <tr>
+            <td>Support correct to level required</td>
+            <td><input type="radio" name="med_support" value="Pass" required></td>
+            <td><input type="radio" name="med_support" value="Fail"></td>
+            <td><input type="radio" name="med_support" value="NA"></td>
+            <td><input type="text" name="med_support_notes" /></td>
+          </tr>
+          <tr>
+            <td>Specialist technique used by trained worker (if applicable)</td>
+            <td><input type="radio" name="med_specialist" value="Pass" required></td>
+            <td><input type="radio" name="med_specialist" value="Fail"></td>
+            <td><input type="radio" name="med_specialist" value="NA"></td>
+            <td><input type="text" name="med_specialist_notes" /></td>
+          </tr>
+          <tr>
+            <td>Client comfort maintained (e.g., drink offered)</td>
+            <td><input type="radio" name="med_comfort" value="Pass" required></td>
+            <td><input type="radio" name="med_comfort" value="Fail"></td>
+            <td><input type="radio" name="med_comfort" value="NA"></td>
+            <td><input type="text" name="med_comfort_notes" /></td>
+          </tr>
+          <tr>
+            <td>Activity signed correctly with correct code</td>
+            <td><input type="radio" name="med_signoff" value="Pass" required></td>
+            <td><input type="radio" name="med_signoff" value="Fail"></td>
+            <td><input type="radio" name="med_signoff" value="NA"></td>
+            <td><input type="text" name="med_signoff_notes" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label for="med_good">Good Practice / Demonstration</label>
+      <textarea id="med_good" name="med_good" class="notes"></textarea>
+
+      <label for="med_improve">Areas for Improvement</label>
+      <textarea id="med_improve" name="med_improve" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Documentation -->
+    <fieldset>
+      <legend>Documentation</legend>
+      <table aria-label="Documentation Checks">
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>N/A</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Care plan adhered to</td>
+            <td><input type="radio" name="doc_careplan" value="Pass" required></td>
+            <td><input type="radio" name="doc_careplan" value="Fail"></td>
+            <td><input type="radio" name="doc_careplan" value="NA"></td>
+            <td><input type="text" name="doc_careplan_notes" /></td>
+          </tr>
+          <tr>
+            <td>Activities completed &amp; signed off on ACP</td>
+            <td><input type="radio" name="doc_activities" value="Pass" required></td>
+            <td><input type="radio" name="doc_activities" value="Fail"></td>
+            <td><input type="radio" name="doc_activities" value="NA"></td>
+            <td><input type="text" name="doc_activities_notes" /></td>
+          </tr>
+          <tr>
+            <td>Notes recorded under visit and each activity (accurate, well written)</td>
+            <td><input type="radio" name="doc_notes" value="Pass" required></td>
+            <td><input type="radio" name="doc_notes" value="Fail"></td>
+            <td><input type="radio" name="doc_notes" value="NA"></td>
+            <td><input type="text" name="doc_notes_notes" /></td>
+          </tr>
+          <tr>
+            <td>Additional charts completed where required</td>
+            <td><input type="radio" name="doc_charts" value="Pass" required></td>
+            <td><input type="radio" name="doc_charts" value="Fail"></td>
+            <td><input type="radio" name="doc_charts" value="NA"></td>
+            <td><input type="text" name="doc_charts_notes" /></td>
+          </tr>
+          <tr>
+            <td>Logged in &amp; out of call correctly</td>
+            <td><input type="radio" name="doc_login" value="Pass" required></td>
+            <td><input type="radio" name="doc_login" value="Fail"></td>
+            <td><input type="radio" name="doc_login" value="NA"></td>
+            <td><input type="text" name="doc_login_notes" /></td>
+          </tr>
+          <tr>
+            <td>NFC Tag used</td>
+            <td><input type="radio" name="doc_nfc" value="Pass" required></td>
+            <td><input type="radio" name="doc_nfc" value="Fail"></td>
+            <td><input type="radio" name="doc_nfc" value="NA"></td>
+            <td><input type="text" name="doc_nfc_notes" /></td>
+          </tr>
+          <tr>
+            <td>Any clinical interventions observed</td>
+            <td><input type="radio" name="doc_clinical" value="Pass" required></td>
+            <td><input type="radio" name="doc_clinical" value="Fail"></td>
+            <td><input type="radio" name="doc_clinical" value="NA"></td>
+            <td><input type="text" name="doc_clinical_notes" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label for="doc_good">Good Practice / Demonstration</label>
+      <textarea id="doc_good" name="doc_good" class="notes"></textarea>
+
+      <label for="doc_improve">Areas for Improvement</label>
+      <textarea id="doc_improve" name="doc_improve" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Fluid & Nutrition -->
+    <fieldset>
+      <legend>Fluid &amp; Nutrition</legend>
+      <table aria-label="Fluid and Nutrition Checks">
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>N/A</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Client provided with choice of meals</td>
+            <td><input type="radio" name="fn_choice" value="Pass" required></td>
+            <td><input type="radio" name="fn_choice" value="Fail"></td>
+            <td><input type="radio" name="fn_choice" value="NA"></td>
+            <td><input type="text" name="fn_choice_notes" /></td>
+          </tr>
+          <tr>
+            <td>Meals prepared safely</td>
+            <td><input type="radio" name="fn_safe" value="Pass" required></td>
+            <td><input type="radio" name="fn_safe" value="Fail"></td>
+            <td><input type="radio" name="fn_safe" value="NA"></td>
+            <td><input type="text" name="fn_safe_notes" /></td>
+          </tr>
+          <tr>
+            <td>Support with eating &amp; drinking if applicable and encouraged</td>
+            <td><input type="radio" name="fn_support" value="Pass" required></td>
+            <td><input type="radio" name="fn_support" value="Fail"></td>
+            <td><input type="radio" name="fn_support" value="NA"></td>
+            <td><input type="text" name="fn_support_notes" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label for="fn_good">Good Practice / Demonstration</label>
+      <textarea id="fn_good" name="fn_good" class="notes"></textarea>
+
+      <label for="fn_improve">Areas for Improvement</label>
+      <textarea id="fn_improve" name="fn_improve" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Additional Checks -->
+    <fieldset>
+      <legend>Additional Checks</legend>
+      <table aria-label="Additional Checks">
+        <thead>
+          <tr>
+            <th>Check</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>N/A</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Incidents/accidents/errors/omissions addressed &amp; reported</td>
+            <td><input type="radio" name="add_incidents" value="Pass" required></td>
+            <td><input type="radio" name="add_incidents" value="Fail"></td>
+            <td><input type="radio" name="add_incidents" value="NA"></td>
+            <td><input type="text" name="add_incidents_notes" /></td>
+          </tr>
+          <tr>
+            <td>Any clinical interventions observed</td>
+            <td><input type="radio" name="add_interventions" value="Pass" required></td>
+            <td><input type="radio" name="add_interventions" value="Fail"></td>
+            <td><input type="radio" name="add_interventions" value="NA"></td>
+            <td><input type="text" name="add_interventions_notes" /></td>
+          </tr>
+          <tr>
+            <td>Call duration appropriate</td>
+            <td><input type="radio" name="add_duration" value="Pass" required></td>
+            <td><input type="radio" name="add_duration" value="Fail"></td>
+            <td><input type="radio" name="add_duration" value="NA"></td>
+            <td><input type="text" name="add_duration_notes" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="subtle">Actions: use separate actions form; create an event on People Planner (<em>Observation Actions</em>) and use the actions log to document progress.</p>
+      <label for="actions_summary">Actions Summary (optional)</label>
+      <textarea id="actions_summary" name="actions_summary" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Client Feedback -->
+    <fieldset>
+      <legend>Client Feedback &amp; Comments</legend>
+      <label for="client_feedback">Client Feedback</label>
+      <textarea id="client_feedback" name="client_feedback" class="notes"></textarea>
+
+      <label for="additional_comments">Any additional comments (e.g., above and beyond)</label>
+      <textarea id="additional_comments" name="additional_comments" class="notes"></textarea>
+    </fieldset>
+
+    <!-- Signatures -->
+    <fieldset>
+      <legend>Signatures</legend>
+      <div class="signature-container">
+        <div class="signature-box">
+          <strong>Observer</strong>
+          <label for="observer_print">Print</label>
+          <input type="text" id="observer_print" name="observer_print" />
+          <label for="observer_sign">Sign</label>
+          <canvas id="observer_sign" width="600" height="150"></canvas>
+          <input type="hidden" id="observer_signature_data" name="observer_signature_data" />
+          <button type="button" data-clear="#observer_sign">Clear Signature</button>
+          <label for="observer_date">Date</label>
+          <input type="date" id="observer_date" name="observer_date" />
+        </div>
+
+        <div class="signature-box">
+          <strong>Healthcare Worker</strong>
+          <label for="hcw_print">Print</label>
+          <input type="text" id="hcw_print" name="hcw_print" />
+          <label for="hcw_sign">Sign</label>
+          <canvas id="hcw_sign" width="600" height="150"></canvas>
+          <input type="hidden" id="hcw_signature_data" name="hcw_signature_data" />
+          <button type="button" data-clear="#hcw_sign">Clear Signature</button>
+          <label for="hcw_date">Date</label>
+          <input type="date" id="hcw_date" name="hcw_date" />
+        </div>
+
+        <div class="signature-box">
+          <strong>Client</strong>
+          <label for="client_print">Print</label>
+          <input type="text" id="client_print" name="client_print" />
+          <label for="client_sign">Sign</label>
+          <canvas id="client_sign" width="600" height="150"></canvas>
+          <input type="hidden" id="client_signature_data" name="client_signature_data" />
+          <button type="button" data-clear="#client_sign">Clear Signature</button>
+          <label for="client_date">Date</label>
+          <input type="date" id="client_date" name="client_date" />
+        </div>
+      </div>
+      <small class="muted">Please provide the carer with a copy of this observation.</small>
+    </fieldset>
+
+    <div class="buttons">
+      <button type="submit">Submit</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
+
+  <script>
+    // Signature pad (very lightweight)
+    function makePad(canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      let drawing = false, lastX = 0, lastY = 0;
+
+      function pos(e) {
+        if (e.touches && e.touches[0]) {
+          const rect = canvas.getBoundingClientRect();
+          return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+        }
+        return { x: e.offsetX, y: e.offsetY };
+      }
+
+      function start(e) {
+        drawing = true;
+        const p = pos(e);
+        lastX = p.x; lastY = p.y;
+        e.preventDefault();
+      }
+      function draw(e) {
+        if (!drawing) return;
+        const p = pos(e);
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        lastX = p.x; lastY = p.y;
+        e.preventDefault();
+      }
+      function end() { drawing = false; }
+
+      canvas.addEventListener('mousedown', start);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', end);
+      canvas.addEventListener('mouseleave', end);
+      canvas.addEventListener('touchstart', start, { passive:false });
+      canvas.addEventListener('touchmove', draw, { passive:false });
+      canvas.addEventListener('touchend', end);
+    }
+
+    // Init all signature canvases
+    ['observer_sign','hcw_sign','client_sign'].forEach(id => makePad(document.getElementById(id)));
+
+    // Clear buttons
+    document.querySelectorAll('[data-clear]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const canvas = document.querySelector(btn.getAttribute('data-clear'));
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+      });
+    });
+
+    // Highlight failed rows
+    document.querySelectorAll('table tbody tr').forEach(row => {
+      const radios = row.querySelectorAll('input[type="radio"]');
+      radios.forEach(r => r.addEventListener('change', () => {
+        const fail = row.querySelector('input[type="radio"][value="Fail"]:checked');
+        row.classList.toggle('fail-row', !!fail);
+      }));
+    });
+
+    // On submit: serialize signatures to hidden inputs
+    document.getElementById('observationForm').addEventListener('submit', (e) => {
+      document.getElementById('observer_signature_data').value = document.getElementById('observer_sign').toDataURL('image/png');
+      document.getElementById('hcw_signature_data').value = document.getElementById('hcw_sign').toDataURL('image/png');
+      document.getElementById('client_signature_data').value = document.getElementById('client_sign').toDataURL('image/png');
+    });
+  </script>
+</body>
+</html>

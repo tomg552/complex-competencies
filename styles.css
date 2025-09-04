@@ -1,0 +1,129 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 2rem;
+  background: #f9f9f9;
+}
+
+h1, h2, legend {
+  text-align: center;
+}
+
+.fail-row {
+  background-color: #fdd;
+}
+
+canvas {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.home-button {
+  background-color: #005ea5;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+  margin: 1rem 0;
+  text-align: center;
+}
+.home-button:hover {
+  background-color: #004b85;
+}
+
+form {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+fieldset {
+  margin-bottom: 2rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+label {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.4rem;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background-color: #eee;
+}
+
+.signature-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.signature-box {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 1rem;
+}
+
+.signature-box small {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+canvas {
+  width: 100%;
+  height: 150px;
+  border: 1px solid #000;
+}
+
+.buttons {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 0 0.5rem;
+}
+
+.signature-box {
+  margin-bottom: 1rem;
+}
+
+.signature-box canvas {
+  display: block;
+}

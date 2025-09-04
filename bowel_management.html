@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bowel Management (Enema & Suppository) Competency Assessment</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Bowel Management (Enema & Suppository) Competency Assessment</h1>
+    <a href="index.html" class="home-button">⬅ Home</a>
+  </header>
+  <main class="form-container">
+    <form id="competencyForm">
+      <fieldset>
+        <legend>Carer Details</legend>
+        <label>Carer Name: <input type="text" id="staffName" name="staffName" required></label>
+        <label>Client Name: <input type="text" id="clientName" name="clientName" required></label>
+        <label>Nurse Assessor Name: <input type="text" id="nurseAssessorName" name="nurseAssessorName" required></label>
+        <label>Assessment Type:
+          <select id="assessmentType" name="assessmentType" required>
+            <option value="">Select...</option>
+            <option value="Simulated">Simulated</option>
+            <option value="Client Facing">Client Facing</option>
+            <option value="Blended">Blended</option>
+          </select>
+        </label>
+        <label>Assessment Date: <input type="date" id="assessmentDate" name="assessmentDate" required></label>
+        <label>Competency Expiry Date: <input type="date" id="expiryDate" name="expiryDate" readonly></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Assessment Criteria</legend>
+        <table>
+          <thead>
+            <tr><th>Skill Area</th><th>Criteria</th><th>Score (1–5)</th></tr>
+          </thead>
+          <tbody id="competency-body"></tbody>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend>Standard Operating Procedure</legend>
+        <label><input type="checkbox" id="sop-confirmation" required> I confirm I have read and understood the SOP for Enema Administration and Suppository Insertion.</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Score Review</legend>
+        <div>
+          <h4>❌ Areas Scored Below 3 (Automatic Fail)</h4>
+          <ul id="fail-list"></ul>
+        </div>
+        <div>
+          <h4>📝 Assessor Actions and Feedback</h4>
+          <textarea id="assessorFeedback" name="assessorFeedback" rows="10"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Signatures</legend>
+        <div class="signature-box">
+          <label>Assessor Signature</label>
+          <canvas id="assessorSign" width="300" height="100"></canvas>
+          <small><strong>Assessor Declaration:</strong> Nurse Assessor: I certify that on this date the person named is competent to carry out the procedure detailed above and that I have current N.M.C. registration.</small>
+        </div>
+        <div class="signature-box">
+          <label>Assessee Signature</label>
+          <canvas id="assesseeSign" width="300" height="100"></canvas>
+          <small><strong>Assessee Declaration:</strong> I certify that I am competent to carry out the above procedure and understand the scope of these competencies. I will seek further training as needed and discontinue the task if my competency lapses.</small>
+        </div>
+      </fieldset>
+
+      <div class="buttons">
+        <button type="button" onclick="saveHTMLAndLocal()">Save Form</button>
+        <button type="button" onclick="clearSignatures()">Clear Signatures</button>
+      </div>
+    </form>
+  </main>
+
+  <script src="scripts.js"></script>
+  <script>
+    const skills = [
+      {
+        area: "1) Understanding Bowel Management Programme",
+        criteria: [
+          "Understands bowel management plan",
+          "Knowledge of gastro-intestinal tract anatomy and physiology"
+        ]
+      },
+      {
+        area: "2) Psychological Considerations",
+        criteria: [
+          "Understands psychological implications",
+          "Explains procedure, gains consent, maintains dignity",
+          "Understands need for PPE and preparation"
+        ]
+      },
+      {
+        area: "3) Suppository Insertion Procedure",
+        criteria: [
+          "Prepares safe environment and equipment",
+          "Correct positioning and use of PPE",
+          "Observes area, inserts suppository safely",
+          "Provides clear communication, documents procedure"
+        ]
+      },
+      {
+        area: "4) Enema Administration",
+        criteria: [
+          "Client bladder empty, warms enema, lubricates nozzle",
+          "Expels air, inserts enema safely",
+          "Advises retention and assists with toileting"
+        ]
+      },
+      {
+        area: "5) Post-Procedure Actions",
+        criteria: [
+          "Cleans and dries area",
+          "Disposes waste and PPE correctly",
+          "Assists client, ensures comfort and privacy",
+          "Monitors and observes client"
+        ]
+      },
+      {
+        area: "6) Complication Knowledge",
+        criteria: [
+          "Identifies and reports abnormalities",
+          "Understands side effects and emergencies"
+        ]
+      },
+      {
+        area: "7) Documentation",
+        criteria: [
+          "Accurate documentation and use of Bristol stool chart",
+          "Knows when and who to escalate concerns to"
+        ]
+      }
+    ];
+
+    renderSkills(skills, "competency-body", "fail-list");
+    window.onload = () => {
+      initSignaturePad("assessorSign");
+      initSignaturePad("assesseeSign");
+      setupFixedExpiryCalculation("assessmentDate", "expiryDate");
+    };
+  </script>
+</body>
+</html>
