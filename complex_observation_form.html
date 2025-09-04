@@ -6,14 +6,15 @@
   <title>Routes Healthcare – Complex Observation Form</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Small, form-specific niceties that won't fight your stylesheet */
-    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     .notes { width:100%; min-height:90px; }
     .section-hint { font-size:0.9rem; color:#555; margin-top:-0.25rem; margin-bottom:0.5rem; }
     .subtle { color:#666; font-size:0.9rem; }
     .flex { display:flex; gap:1rem; flex-wrap:wrap; }
     .w-1-2 { flex: 1 1 280px; }
     .muted { color:#666; }
+    .signature-box { padding: 0.75rem; border: 1px dashed #bbb; border-radius: 8px; margin-bottom: 0.5rem; }
+    .buttons { display:flex; gap:0.5rem; margin-top:1rem; }
+    .fail-row { background: #fff1f1; }
   </style>
 </head>
 <body>
@@ -41,14 +42,6 @@
       <input type="text" id="observer_name_role" name="observer_name_role" required />
     </fieldset>
 
-    <!-- Helper for checklist tables -->
-    <template id="radioTemplate">
-      <td><input type="radio" /></td>
-      <td><input type="radio" /></td>
-      <td><input type="radio" /></td>
-      <td><input type="text" placeholder="Notes (optional)" /></td>
-    </template>
-
     <!-- Dignity & Respect -->
     <fieldset>
       <legend>Dignity &amp; Respect</legend>
@@ -64,7 +57,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Each row: Pass/Fail/NA radios + notes -->
           <tr>
             <td>Uses appropriate language</td>
             <td><input type="radio" name="dignity_language" value="Pass" required></td>
@@ -455,55 +447,18 @@
       <textarea id="actions_summary" name="actions_summary" class="notes"></textarea>
     </fieldset>
 
-    <!-- Client Feedback -->
+    <!-- Observer Signature ONLY -->
     <fieldset>
-      <legend>Client Feedback &amp; Comments</legend>
-      <label for="client_feedback">Client Feedback</label>
-      <textarea id="client_feedback" name="client_feedback" class="notes"></textarea>
-
-      <label for="additional_comments">Any additional comments (e.g., above and beyond)</label>
-      <textarea id="additional_comments" name="additional_comments" class="notes"></textarea>
-    </fieldset>
-
-    <!-- Signatures -->
-    <fieldset>
-      <legend>Signatures</legend>
-      <div class="signature-container">
-        <div class="signature-box">
-          <strong>Observer</strong>
-          <label for="observer_print">Print</label>
-          <input type="text" id="observer_print" name="observer_print" />
-          <label for="observer_sign">Sign</label>
-          <canvas id="observer_sign" width="600" height="150"></canvas>
-          <input type="hidden" id="observer_signature_data" name="observer_signature_data" />
-          <button type="button" data-clear="#observer_sign">Clear Signature</button>
-          <label for="observer_date">Date</label>
-          <input type="date" id="observer_date" name="observer_date" />
-        </div>
-
-        <div class="signature-box">
-          <strong>Healthcare Worker</strong>
-          <label for="hcw_print">Print</label>
-          <input type="text" id="hcw_print" name="hcw_print" />
-          <label for="hcw_sign">Sign</label>
-          <canvas id="hcw_sign" width="600" height="150"></canvas>
-          <input type="hidden" id="hcw_signature_data" name="hcw_signature_data" />
-          <button type="button" data-clear="#hcw_sign">Clear Signature</button>
-          <label for="hcw_date">Date</label>
-          <input type="date" id="hcw_date" name="hcw_date" />
-        </div>
-
-        <div class="signature-box">
-          <strong>Client</strong>
-          <label for="client_print">Print</label>
-          <input type="text" id="client_print" name="client_print" />
-          <label for="client_sign">Sign</label>
-          <canvas id="client_sign" width="600" height="150"></canvas>
-          <input type="hidden" id="client_signature_data" name="client_signature_data" />
-          <button type="button" data-clear="#client_sign">Clear Signature</button>
-          <label for="client_date">Date</label>
-          <input type="date" id="client_date" name="client_date" />
-        </div>
+      <legend>Observer Signature</legend>
+      <div class="signature-box">
+        <label for="observer_print"><strong>Observer – Print</strong></label>
+        <input type="text" id="observer_print" name="observer_print" />
+        <label for="observer_sign"><strong>Observer – Sign</strong></label>
+        <canvas id="observer_sign" width="600" height="150"></canvas>
+        <input type="hidden" id="observer_signature_data" name="observer_signature_data" />
+        <button type="button" id="clear_observer_sig">Clear Signature</button>
+        <label for="observer_date"><strong>Date</strong></label>
+        <input type="date" id="observer_date" name="observer_date" />
       </div>
       <small class="muted">Please provide the carer with a copy of this observation.</small>
     </fieldset>
@@ -515,8 +470,9 @@
   </form>
 
   <script>
-    // Signature pad (very lightweight)
-    function makePad(canvas) {
+    // Signature pad for a single canvas
+    (function(){
+      const canvas = document.getElementById('observer_sign');
       const ctx = canvas.getContext('2d');
       ctx.lineWidth = 2;
       ctx.lineCap = 'round';
@@ -529,24 +485,13 @@
         }
         return { x: e.offsetX, y: e.offsetY };
       }
-
-      function start(e) {
-        drawing = true;
-        const p = pos(e);
-        lastX = p.x; lastY = p.y;
-        e.preventDefault();
-      }
+      function start(e) { drawing = true; const p = pos(e); lastX=p.x; lastY=p.y; e.preventDefault(); }
       function draw(e) {
         if (!drawing) return;
-        const p = pos(e);
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(p.x, p.y);
-        ctx.stroke();
-        lastX = p.x; lastY = p.y;
-        e.preventDefault();
+        const p = pos(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(p.x,p.y); ctx.stroke();
+        lastX=p.x; lastY=p.y; e.preventDefault();
       }
-      function end() { drawing = false; }
+      function end(){ drawing=false; }
 
       canvas.addEventListener('mousedown', start);
       canvas.addEventListener('mousemove', draw);
@@ -555,19 +500,11 @@
       canvas.addEventListener('touchstart', start, { passive:false });
       canvas.addEventListener('touchmove', draw, { passive:false });
       canvas.addEventListener('touchend', end);
-    }
 
-    // Init all signature canvases
-    ['observer_sign','hcw_sign','client_sign'].forEach(id => makePad(document.getElementById(id)));
-
-    // Clear buttons
-    document.querySelectorAll('[data-clear]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const canvas = document.querySelector(btn.getAttribute('data-clear'));
-        const ctx = canvas.getContext('2d');
+      document.getElementById('clear_observer_sig').addEventListener('click', () => {
         ctx.clearRect(0,0,canvas.width,canvas.height);
       });
-    });
+    })();
 
     // Highlight failed rows
     document.querySelectorAll('table tbody tr').forEach(row => {
@@ -578,11 +515,11 @@
       }));
     });
 
-    // On submit: serialize signatures to hidden inputs
-    document.getElementById('observationForm').addEventListener('submit', (e) => {
-      document.getElementById('observer_signature_data').value = document.getElementById('observer_sign').toDataURL('image/png');
-      document.getElementById('hcw_signature_data').value = document.getElementById('hcw_sign').toDataURL('image/png');
-      document.getElementById('client_signature_data').value = document.getElementById('client_sign').toDataURL('image/png');
+    // On submit: serialize the single signature as JPEG to keep payload light
+    document.getElementById('observationForm').addEventListener('submit', () => {
+      const c = document.getElementById('observer_sign');
+      const h = document.getElementById('observer_signature_data');
+      h.value = c.toDataURL('image/jpeg', 0.85);
     });
   </script>
 </body>
